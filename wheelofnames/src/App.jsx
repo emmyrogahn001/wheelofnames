@@ -119,16 +119,35 @@ export default function WheelOfNames() {
       ctx.fill();
       ctx.stroke();
 
-      // Text
+      // Text Rendering
       ctx.save();
       ctx.translate(center, center);
       ctx.rotate(startAngle + sliceAngle / 2);
       ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle'; // Changed to middle for better centering
+
+      // --- RESPONSIVE FONT LOGIC ---
+      const maxTextWidth = radius - 60; // Available space (radius minus padding)
+      let fontSize = 24; // Default starting font size
+      ctx.font = `bold ${fontSize}px sans-serif`;
+      
+      let textWidth = ctx.measureText(name).width;
+
+      // If text is too long, shrink the font size
+      if (textWidth > maxTextWidth) {
+        // Calculate ratio to fit
+        const ratio = maxTextWidth / textWidth;
+        // Apply ratio to font size, but don't go smaller than 10px
+        fontSize = Math.max(10, Math.floor(fontSize * ratio));
+        ctx.font = `bold ${fontSize}px sans-serif`;
+      }
+      // -----------------------------
+
       ctx.fillStyle = '#fff';
-      ctx.font = 'bold 24px sans-serif';
       ctx.shadowColor = 'rgba(0,0,0,0.5)';
       ctx.shadowBlur = 4;
-      ctx.fillText(name, radius - 20, 10);
+      // y is 0 because textBaseline is middle
+      ctx.fillText(name, radius - 20, 0); 
       ctx.restore();
     });
   };
@@ -224,12 +243,13 @@ export default function WheelOfNames() {
     
     setRotation(totalNewRotation);
 
+    // CHANGED: Timer set to 6000ms (6 seconds)
     setTimeout(() => {
       setSpinning(false);
       setWinner(names[selectedIndex]);
       setShowWinnerModal(true);
       fireConfetti();
-    }, 5000); 
+    }, 6000); 
   };
 
   const removeWinner = () => {
@@ -356,7 +376,8 @@ export default function WheelOfNames() {
                 width: 'min(80vw, 500px)', 
                 height: 'min(80vw, 500px)',
                 transform: `rotate(${rotation}deg)`,
-                transitionDuration: '5s'
+                // CHANGED: Transition duration set to 6 seconds
+                transitionDuration: '6s'
               }}
             >
               <canvas 
