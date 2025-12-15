@@ -402,7 +402,7 @@ export default function WheelOfNames() {
 
           <div className="mt-8 text-slate-500 text-sm font-medium">
              {names.length > 1 
-               ? "Spin to select the next person to eliminate!" 
+               ? "" 
                : ""}
           </div>
 
